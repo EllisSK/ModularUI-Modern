@@ -209,8 +209,8 @@ public abstract class AbstractMenuButton<W extends AbstractMenuButton<W>> extend
     }
 
     @Override
-    protected WidgetThemeEntry<?> getWidgetThemeInternal(ITheme theme) {
-        return theme.getButtonTheme();
+    protected WidgetThemeEntry<?> getWidgetThemeEntryInternal(ITheme theme) {
+        return theme.getButtonThemeEntry();
     }
 
     public enum Direction {

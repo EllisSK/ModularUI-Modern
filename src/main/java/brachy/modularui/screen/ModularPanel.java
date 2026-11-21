@@ -204,8 +204,8 @@ public class ModularPanel<W extends ModularPanel<W>> extends ParentWidget<W> imp
     }
 
     @Override
-    public WidgetThemeEntry<?> getWidgetThemeInternal(ITheme theme) {
-        return theme.getPanelTheme();
+    public WidgetThemeEntry<?> getWidgetThemeEntryInternal(ITheme theme) {
+        return theme.getPanelThemeEntry();
     }
 
     @Override
@@ -869,12 +869,6 @@ public class ModularPanel<W extends ModularPanel<W>> extends ParentWidget<W> imp
 
     public W onCloseAction(Consumer<W> onCloseAction) {
         this.onCloseAction = onCloseAction;
-        return getThis();
-    }
-
-    public W themeOverride(String id) {
-        this.themeOverride = id;
-        this.theme = null;
         return getThis();
     }
 

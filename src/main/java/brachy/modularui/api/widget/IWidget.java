@@ -254,7 +254,7 @@ public interface IWidget extends ITreeNode<IWidget> {
      * Draws the background of this widget.
      *
      * @param context     gui context
-     * @param widgetTheme widget theme of this widget
+     * @param widgetTheme widget theme entry of this widget
      */
     default void drawBackground(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {}
 
@@ -264,15 +264,15 @@ public interface IWidget extends ITreeNode<IWidget> {
      * {@link #drawOverlay(ModularGuiContext, WidgetThemeEntry)}
      *
      * @param context     gui context
-     * @param widgetTheme widget theme
+     * @param widgetTheme widget theme entry of this widget
      */
     default void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {}
 
     /**
-     * Draws the overlay of this theme.
+     * Draws the overlay of this widget.
      *
      * @param context     gui context
-     * @param widgetTheme widget theme
+     * @param widgetTheme widget theme entry of this widget
      */
     default void drawOverlay(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {}
 
@@ -292,9 +292,15 @@ public interface IWidget extends ITreeNode<IWidget> {
         return null;
     }
 
-    default WidgetThemeEntry<?> getWidgetTheme(ITheme theme) {
-        return theme.getFallback();
+    default WidgetThemeEntry<?> getWidgetThemeEntry(ITheme theme) {
+        return theme.getFallbackEntry();
     }
+
+    /**
+     * Gets the theme that is currently in use for this widget.
+     * @return The gui theme.
+     */
+    ITheme getTheme();
 
     /**
      * @return all children of this widget
