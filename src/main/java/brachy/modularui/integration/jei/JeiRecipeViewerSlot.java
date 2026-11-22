@@ -3,6 +3,7 @@ package brachy.modularui.integration.jei;
 import brachy.modularui.drawable.TooltipComponentIcon;
 import brachy.modularui.integration.recipeviewer.RecipeViewerSlotWidget;
 import brachy.modularui.integration.recipeviewer.entry.EntryList;
+import brachy.modularui.utils.TooltipLines;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenPosition;
@@ -10,8 +11,6 @@ import net.minecraft.client.gui.navigation.ScreenPosition;
 import brachy.modularui.screen.viewport.ModularGuiContext;
 
 import brachy.modularui.theme.WidgetThemeEntry;
-
-import brachy.modularui.utils.TooltipLines;
 
 import lombok.Getter;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -96,11 +95,7 @@ public class JeiRecipeViewerSlot<I, T> extends RecipeViewerSlotWidget<I, JeiReci
     @Override
     public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         if (this.slotWidget == null) return;
-
-        this.slotWidget.draw(context.getGraphics());
-        if (isHovering()){
-            slotWidget.drawHoverOverlays(context.getGraphics());
-        }
+        this.slotWidget.draw(context.getGraphics(), isHovering());
     }
 
 /*

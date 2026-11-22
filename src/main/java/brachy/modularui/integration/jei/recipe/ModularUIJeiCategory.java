@@ -159,11 +159,10 @@ public abstract class ModularUIJeiCategory<T> implements IRecipeCategory<T> {
         return recipeViewerSlot;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @ApiStatus.OverrideOnly
     @MustBeInvokedByOverriders
     public IWidget createRecipeSlotForWidget(IRecipeLayoutBuilder builder, IWidget widget, T recipe, IFocusGroup focuses, MutableInt index) {
-        if (!(widget instanceof JeiRecipeViewerSlot recipeViewerSlot)) return widget;
+        if (!(widget instanceof JeiRecipeViewerSlot<?, ?> recipeViewerSlot)) return widget;
 
         if (recipeViewerSlot.getName() == null) {
             recipeViewerSlot.name("jei_slot_" + index.getAndIncrement());

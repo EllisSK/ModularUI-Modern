@@ -2,24 +2,37 @@ package brachy.modularui.core.mixins.jei;
 
 import brachy.modularui.integration.jei.recipe.ModularUIJeiCategory;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.gui.IRecipeLayoutDrawable;
+import mezz.jei.common.util.ImmutableSize2i;
+import mezz.jei.gui.recipes.IRecipeLayoutWithButtons;
 import mezz.jei.gui.recipes.RecipeGuiLogic;
+
+import net.minecraft.client.renderer.Rect2i;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+
+import java.util.function.Function;
 
 @Mixin(value = RecipeGuiLogic.class, remap = false)
 public class RecipeGuiLogicMixin {
 
-    @ModifyVariable(method = "getVisibleRecipeLayoutsWithButtons", at = @At(value = "STORE"), name = "recipeHeight")
-    private int modularui$useCategoryMaxHeightForLayout(int recipeHeight,
-                                                        @Local(name = "recipeCategory") IRecipeCategory<?> recipeCategory) {
-        // if this is a MUI category, force the gui to use the category's max height as the recipe height
-        //  (instead of the height of the first recipe it finds, which may be shorter than others)
-        if (recipeCategory instanceof ModularUIJeiCategory<?> muiCategory) {
-            return muiCategory.getMaxHeight();
-        }
-        return recipeHeight;
+    @ModifyArg(method = "getVisibleRecipeLayoutsWithButtons",
+            at = @At(value = "INVOKE", target = "Ljava/util/Optional;map(Ljava/util/function/Function;)Ljava/util/Optional;"))
+    private Function<IRecipeLayoutWithButtons<?>, ImmutableSize2i> modularui$useCategoryMaxHeightForLayout(Function<IRecipeLayoutWithButtons<?>, ImmutableSize2i> original) {
+        return layoutWithButtons -> {
+            ImmutableSize2i size = original.apply(layoutWithButtons);
+            IRecipeLayoutDrawable<?> recipeLayout = layoutWithButtons.getRecipeLayout();
+            if (recipeLayout.getRecipeCategory() instanceof ModularUIJeiCategory<?> muiCategory) {
+                Rect2i area = recipeLayout.getRect();
+                // size.width = totalWidth = area.width + 2*padding + buttonsWidth
+                int borderWidth = size.width() - area.getWidth();
+                // size.height() contains the layout's areaWithBorder.height
+                int borderHeight = size.height() - area.getHeight();
+                return new ImmutableSize2i(muiCategory.getMaxWidth() + borderWidth, muiCategory.getMaxHeight() + borderHeight);
+            }
+            return size;
+        };
     }
 }
