@@ -35,7 +35,7 @@ public class UITexture implements IDrawable {
     public static final MapCodec<UITexture> CODEC = IDrawable.CODECS.register("texture",
             CodecUtil.chainedMapCodec(CODEC_FROM_NAME.fieldOf("name"), CODEC_FROM_BUILDER));
 
-    public static final UITexture DEFAULT = fullImage("gui/options_background", ColorType.DEFAULT);
+    public static final UITexture DEFAULT = fullImage(ResourceLocation.withDefaultNamespace("gui/options_background"), ColorType.DEFAULT);
     public static final FileToIdConverter GUI_TEXTURE_ID_CONVERTER = new FileToIdConverter("textures/gui", ".png");
 
     private static final ResourceLocation ICONS_LOCATION = ModularUI.id("textures/gui/icons.png");
@@ -117,7 +117,7 @@ public class UITexture implements IDrawable {
         if (png || textures) {
             String path = location.getPath();
             path = png ? (textures ? TEXTURES_PREFIX + path + PNG_SUFFIX : path + PNG_SUFFIX) : TEXTURES_PREFIX + path;
-            location = new ResourceLocation(location.getNamespace(), path);
+            location = location.withPath(path);
         }
         this.location = location;
         this.u0 = u0;
@@ -136,24 +136,40 @@ public class UITexture implements IDrawable {
         return new UITexture(location, 0, 0, 1, 1, null);
     }
 
+    /**
+     * @deprecated use {@link #fullImage(ResourceLocation)}
+     */
+    @Deprecated(forRemoval = true)
     public static UITexture fullImage(String location) {
-        return fullImage(new ResourceLocation(location), null);
+        return fullImage(ResourceLocation.parse(location), null);
     }
 
+    /**
+     * @deprecated use {@link #fullImage(ResourceLocation)}
+     */
+    @Deprecated(forRemoval = true)
     public static UITexture fullImage(String mod, String location) {
-        return fullImage(new ResourceLocation(mod, location), null);
+        return fullImage(ResourceLocation.fromNamespaceAndPath(mod, location), null);
     }
 
     public static UITexture fullImage(ResourceLocation location, ColorType colorType) {
         return new UITexture(location, 0, 0, 1, 1, colorType);
     }
 
+    /**
+     * @deprecated use {@link #fullImage(ResourceLocation, ColorType)}
+     */
+    @Deprecated(forRemoval = true)
     public static UITexture fullImage(String location, ColorType colorType) {
-        return fullImage(new ResourceLocation(location), colorType);
+        return fullImage(ResourceLocation.parse(location), colorType);
     }
 
+    /**
+     * @deprecated use {@link #fullImage(ResourceLocation, ColorType)}
+     */
+    @Deprecated(forRemoval = true)
     public static UITexture fullImage(String mod, String location, ColorType colorType) {
-        return fullImage(new ResourceLocation(mod, location), colorType);
+        return fullImage(ResourceLocation.fromNamespaceAndPath(mod, location), colorType);
     }
 
     public UITexture register(String name) {
@@ -315,17 +331,21 @@ public class UITexture implements IDrawable {
         /**
          * @param mod  mod location of the image to draw
          * @param path path of the image to draw
+         * @deprecated Use {@link #location(ResourceLocation)}
          */
+        @Deprecated(forRemoval = true)
         public Builder location(String mod, String path) {
-            this.location = new ResourceLocation(mod, path);
+            this.location = ResourceLocation.fromNamespaceAndPath(mod, path);
             return this;
         }
 
         /**
          * @param path path of the image to draw in minecraft asset folder
+         * @deprecated Use {@link #location(ResourceLocation)}
          */
+        @Deprecated(forRemoval = true)
         public Builder location(String path) {
-            this.location = new ResourceLocation(path);
+            this.location = ResourceLocation.parse(path);
             return this;
         }
 

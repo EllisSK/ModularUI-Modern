@@ -11,6 +11,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -30,13 +31,13 @@ public class ModularUI {
 
     public static final String MOD_ID = "modularui";
     public static final String NAME = "ModularUI";
-    private static final ResourceLocation TEMPLATE_LOCATION = new ResourceLocation(MOD_ID, "");
+    private static final ResourceLocation TEMPLATE_LOCATION = ResourceLocation.fromNamespaceAndPath(MOD_ID, "");
 
     public static final Logger LOGGER = LogManager.getLogger(NAME);
     public static final boolean UNIT_TEST = Boolean.getBoolean("unit.testing");
 
-    public ModularUI() {
-        DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    public ModularUI(FMLJavaModLoadingContext ctx) {
+        DistExecutor.unsafeRunForDist(() -> () -> new ClientProxy(ctx), () -> () -> new CommonProxy(ctx));
     }
 
     public static ResourceLocation id(String path) {
@@ -46,7 +47,7 @@ public class ModularUI {
 
         int i = path.indexOf(':');
         if (i > 0) {
-            return new ResourceLocation(path);
+            return ResourceLocation.parse(path);
         } else if (i == 0) {
             path = path.substring(i + 1);
         }
