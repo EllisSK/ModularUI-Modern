@@ -6,19 +6,19 @@ import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.BooleanSupplier;
 
 public class DummyChunkSource extends ChunkSource {
 
     @Getter
     private final SchemaLevel level;
-    private final Long2ObjectMap<DummyChunk> chunks = new Long2ObjectOpenHashMap<>();
+    private final ConcurrentMap<ChunkPos, DummyChunk> chunks = new ConcurrentHashMap<>();
     @Getter
     private final LevelLightEngine lightEngine;
 
@@ -30,7 +30,7 @@ public class DummyChunkSource extends ChunkSource {
     @Override
     public @Nullable ChunkAccess getChunk(int chunkX, int chunkZ, @NotNull ChunkStatus requiredStatus, boolean load) {
         ChunkPos pos = new ChunkPos(chunkX, chunkZ);
-        return chunks.computeIfAbsent(pos.toLong(), posLong1 -> {
+        return this.chunks.computeIfAbsent(pos, posLong1 -> {
             DummyChunk newChunk = new DummyChunk(level, pos);
             newChunk.setLoaded(true);
             return newChunk;
@@ -38,7 +38,7 @@ public class DummyChunkSource extends ChunkSource {
     }
 
     public @Nullable DummyChunk getChunkIfPresent(int chunkX, int chunkZ) {
-        return chunks.get(ChunkPos.asLong(chunkX, chunkZ));
+        return this.chunks.get(new ChunkPos(chunkX, chunkZ));
     }
 
     @Override
@@ -51,11 +51,11 @@ public class DummyChunkSource extends ChunkSource {
 
     @Override
     public @NotNull String gatherStats() {
-        return "Dummy";
+        return "Dummy, " + this.getLoadedChunksCount();
     }
 
     @Override
     public int getLoadedChunksCount() {
-        return chunks.size();
+        return this.chunks.size();
     }
 }
