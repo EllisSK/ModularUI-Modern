@@ -30,20 +30,22 @@ public class DummyChunkSource extends ChunkSource {
     @Override
     public @Nullable ChunkAccess getChunk(int chunkX, int chunkZ, @NotNull ChunkStatus requiredStatus, boolean load) {
         ChunkPos pos = new ChunkPos(chunkX, chunkZ);
-        return this.chunks.computeIfAbsent(pos, posLong1 -> {
+        if (this.chunks.containsKey(pos)) {
+            return this.chunks.get(pos);
+        } else if (load) {
             DummyChunk newChunk = new DummyChunk(level, pos);
             newChunk.setLoaded(true);
+            this.chunks.put(pos, newChunk);
             return newChunk;
-        });
-    }
-
-    public @Nullable DummyChunk getChunkIfPresent(int chunkX, int chunkZ) {
-        return this.chunks.get(new ChunkPos(chunkX, chunkZ));
+        } else {
+            // no loaded chunk and no need to load new one
+            return null;
+        }
     }
 
     @Override
     public boolean hasChunk(int chunkX, int chunkZ) {
-        return true;
+        return this.chunks.containsKey(new ChunkPos(chunkX, chunkZ));
     }
 
     @Override
