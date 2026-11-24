@@ -2,6 +2,7 @@ package brachy.modularui.integration.jei.handler;
 
 import brachy.modularui.api.IMuiScreen;
 import brachy.modularui.api.widget.IWidget;
+import brachy.modularui.core.mixins.jei.IngredientListOverlayAccessor;
 import brachy.modularui.integration.jei.GhostIngredientTarget;
 import brachy.modularui.integration.jei.JeiRecipeViewerSlot;
 import brachy.modularui.integration.jei.ModularUIJeiPlugin;
@@ -138,7 +139,8 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         // only set the search field state if it's JEI's actual search field and not JEMI
         if (ModularUIJeiPlugin.getRuntime().getIngredientListOverlay() instanceof IngredientListOverlay realOverlay) {
             if (focused) {
-                realOverlay.getSearchInputLayer().focus();
+                // JEI 19.64's SearchInputLayer has no focus() (JEI 19.70 added it); focus its text field directly
+                ((IngredientListOverlayAccessor) realOverlay).getSearchField().setFocused(true);
             } else {
                 realOverlay.getSearchInputLayer().clearFocus();
             }
