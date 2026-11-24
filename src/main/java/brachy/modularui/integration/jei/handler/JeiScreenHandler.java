@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import mezz.jei.api.gui.builder.IClickableIngredientFactory;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.gui.handlers.IGuiProperties;
@@ -171,6 +172,13 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
                 return (Optional<IClickableIngredient<?>>) ingredient;
             }
             return Optional.empty();
+        }
+
+        // JEI 19.64 asks with a factory, and IGuiContainerHandler and IScreenHandler both default it
+        @Override
+        public @NotNull Optional<? extends IClickableIngredient<?>> getClickableIngredientUnderMouse(IClickableIngredientFactory factory, T screen,
+                                                                                               double mouseX, double mouseY) {
+            return getClickableIngredientUnderMouse(screen, mouseX, mouseY);
         }
 
         private <I> I mapFirstIngredient(IngredientProvider<I> provider) {

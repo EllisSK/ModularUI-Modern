@@ -30,6 +30,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.common.gui.JeiTooltip;
 import mezz.jei.library.gui.ingredients.ICycler;
+import mezz.jei.library.gui.ingredients.RecipeSlotIngredients;
 import mezz.jei.library.gui.recipes.OutputSlotTooltipCallback;
 import mezz.jei.library.ingredients.DisplayIngredientAcceptor;
 import org.jetbrains.annotations.ApiStatus;
@@ -166,8 +167,9 @@ public class JeiRecipeViewerSlot<I, T> extends RecipeViewerSlotWidget<I, JeiReci
             }
         }
 
-        recipeSlot.modularui$setAllIngredients(allIngredients);
-        recipeSlot.modularui$setDisplayIngredients(focusedIngredients);
+        recipeSlot.modularui$setIngredients(new RecipeSlotIngredients(allIngredients, focusedIngredients,
+                recipeSlot::modularui$onIngredientsChanged));
+        recipeSlot.modularui$onIngredientsChanged();
     }
 
     @Override
@@ -212,9 +214,10 @@ public class JeiRecipeViewerSlot<I, T> extends RecipeViewerSlotWidget<I, JeiReci
     // copied from RecipeLayoutBuilder#addOutputSlotTooltipCallback
     private void addOutputSlotTooltipCallback(RecipeSlotAccessor slot) {
         ResourceLocation recipeName = recipeCategory.getRegistryName(recipe);
-        if (recipeName != null) {
+        List<ResourceLocation> sourceRecipeIds = recipeCategory.getSourceRecipeIds(recipe);
+        if (recipeName != null || !sourceRecipeIds.isEmpty()) {
             RecipeType<T> recipeType = recipeCategory.getRecipeType();
-            OutputSlotTooltipCallback callback = new OutputSlotTooltipCallback(recipeName, recipeType);
+            OutputSlotTooltipCallback callback = new OutputSlotTooltipCallback(recipeName, sourceRecipeIds, recipeType);
             slot.modularui$getTooltipCallbacks().add(callback);
         }
     }
