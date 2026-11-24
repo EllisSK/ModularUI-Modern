@@ -113,7 +113,7 @@ public class TestMachine {
                             .child(new ParentWidget<>()
                                     .coverChildren(176, 30)
                                     .padding(7)
-                                    .widgetTheme(IThemeApi.PANEL)
+                                    .widgetThemeKey(IThemeApi.PANEL)
                                     .child(Recipes.buildMachineUI(panel, this.inputItems, this.outputItems, this.inputFluids, this.outputFluids, new DoubleSyncValue(this::getProgress), false))
                                     .child(new ParentWidget<>()
                                             .coverChildren()
@@ -141,7 +141,7 @@ public class TestMachine {
                             .child(new SingleChildWidget<>()
                                     .coverChildren()
                                     .padding(7)
-                                    .widgetTheme(IThemeApi.PANEL)
+                                    .widgetThemeKey(IThemeApi.PANEL)
                                     .child(SlotGroupWidget.playerInventory(false))));
         }
 
@@ -368,7 +368,7 @@ public class TestMachine {
             return false;
         }
 
-        public static IWidget buildMachineUI(ModularPanel<?> panel, IItemHandler inItems, IItemHandler outItems,
+        public static IWidget buildMachineUI(ModularPanel<?> panel, IItemHandlerModifiable inItems, IItemHandlerModifiable outItems,
                                              IMultiTankFluidHandler inFluids, IMultiTankFluidHandler outFluids, IDoubleValue<?> progress,
                                              final boolean isRecipeViewerUI) {
             var val = new StringValue("Option 1");

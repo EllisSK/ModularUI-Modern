@@ -48,7 +48,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
 
 import org.jetbrains.annotations.NotNullByDefault;
@@ -62,7 +62,7 @@ import java.util.function.Supplier;
 @NotNullByDefault
 public class TestRecipeViewerGuis {
 
-    private static final IItemHandler EMPTY_INFINITE_ITEM_HANDLER = new EmptyItemHandler() {
+    private static final IItemHandlerModifiable EMPTY_INFINITE_ITEM_HANDLER = new EmptyItemHandler() {
         @Override
         public int getSlots() {
             return Integer.MAX_VALUE; // pls don't iterate UwU

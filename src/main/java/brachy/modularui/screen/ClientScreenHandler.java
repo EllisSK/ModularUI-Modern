@@ -609,7 +609,7 @@ public class ClientScreenHandler {
 
         ITheme theme;
         if (locatedHovered != null && (showHovered || showParent)) {
-            theme = locatedHovered.getElement().getPanel().getTheme();
+            theme = locatedHovered.getElement().getTheme();
         } else {
             theme = context.getTheme();
         }
@@ -639,7 +639,7 @@ public class ClientScreenHandler {
             locatedHovered.unapplyMatrix(context);
             if (showHovered) {
                 if (ModularUIConfig.Dev.showWidgetTheme()) {
-                    s = I18n.get("modularui.debug.widget_theme", hovered.getWidgetTheme(hovered.getPanel().getTheme()).key().getFullName());
+                    s = I18n.get("modularui.debug.widget_theme_key", hovered.getWidgetThemeEntry(hovered.getTheme()).key().getFullName());
                     GuiDraw.drawText(graphics, s, 5, lineY, scale, textColor, true);
                     lineY -= shift;
                 }
@@ -662,7 +662,7 @@ public class ClientScreenHandler {
                     lineY -= 10;
                 }
                 if (ModularUIConfig.Dev.showParentWidgetTheme()) {
-                    s = I18n.get("modularui.debug.widget_theme", parent.getWidgetTheme(parent.getPanel().getTheme()).key().getFullName());
+                    s = I18n.get("modularui.debug.widget_theme_key", parent.getWidgetThemeEntry(parent.getTheme()).key().getFullName());
                     GuiDraw.drawText(graphics, s, 5, lineY, scale, textColor, true);
                     lineY -= shift;
                 }

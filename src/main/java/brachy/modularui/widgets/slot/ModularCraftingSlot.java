@@ -15,7 +15,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +42,7 @@ public class ModularCraftingSlot extends ModularSlot {
     private int amountCrafted;
     private final Consumer<Slot> slotChangeListener = this::updateCraftResult;
 
-    public ModularCraftingSlot(IItemHandler outputInventory, int index) {
+    public ModularCraftingSlot(IItemHandlerModifiable outputInventory, int index) {
         super(outputInventory, index);
         this.canPut(false);
     }

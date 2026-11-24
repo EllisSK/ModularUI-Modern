@@ -124,20 +124,20 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     }
 
     @Override
-    public WidgetThemeEntry<?> getWidgetThemeInternal(ITheme theme) {
+    public WidgetThemeEntry<?> getWidgetThemeEntryInternal(ITheme theme) {
         PlayerSlotType playerSlotType = this.syncHandler != null ? this.syncHandler.getPlayerSlotType() : null;
-        if (playerSlotType == null) return theme.getWidgetTheme(IThemeApi.ITEM_SLOT);
+        if (playerSlotType == null) return theme.getWidgetThemeEntry(IThemeApi.ITEM_SLOT);
         return switch (playerSlotType) {
-            case HOTBAR -> theme.getWidgetTheme(IThemeApi.ITEM_SLOT_PLAYER_HOTBAR);
-            case MAIN_INVENTORY -> theme.getWidgetTheme(IThemeApi.ITEM_SLOT_PLAYER_MAIN_INV);
-            case OFFHAND -> theme.getWidgetTheme(IThemeApi.ITEM_SLOT_PLAYER_OFFHAND);
-            case ARMOR -> theme.getWidgetTheme(IThemeApi.ITEM_SLOT_PLAYER_ARMOR);
+            case HOTBAR -> theme.getWidgetThemeEntry(IThemeApi.ITEM_SLOT_PLAYER_HOTBAR);
+            case MAIN_INVENTORY -> theme.getWidgetThemeEntry(IThemeApi.ITEM_SLOT_PLAYER_MAIN_INV);
+            case OFFHAND -> theme.getWidgetThemeEntry(IThemeApi.ITEM_SLOT_PLAYER_OFFHAND);
+            case ARMOR -> theme.getWidgetThemeEntry(IThemeApi.ITEM_SLOT_PLAYER_ARMOR);
         };
     }
 
     public int getSlotHoverColor() {
-        WidgetThemeEntry<SlotTheme> theme = getWidgetTheme(getPanel().getTheme(), SlotTheme.class);
-        return theme.theme().getSlotHoverColor();
+        WidgetThemeEntry<SlotTheme> entry = getWidgetThemeEntry(getTheme(), SlotTheme.class);
+        return entry.theme().getSlotHoverColor();
     }
 
     @Override
@@ -287,12 +287,10 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
                 }
                 GuiDraw.drawStandardSlotAmountText(context, amount, format, getArea(), z);
 
-                int cachedCount = slotStack.getCount();
-                slotStack.setCount(1); // required to not render the amount overlay
+                // count of 1 is required to not render the amount overlay
                 // render other overlays like durability bar
-                context.getGraphics().renderItemDecorations(((ScreenAccessor) screen).getFont(), slotStack, 1, 1,
-                        null);
-                slotStack.setCount(cachedCount);
+                context.getGraphics().renderItemDecorations(((ScreenAccessor) screen).getFont(),
+                        slotStack.copyWithCount(1), 1, 1, null);
                 RenderSystem.disableDepthTest();
             }
         }
